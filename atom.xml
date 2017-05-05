@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-28T03:25:24.000Z</updated>
+  <updated>2017-05-05T09:56:44.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>elasticSearch</title>
+    <link href="http://yoursite.com/2017/05/05/elasticSearch%E5%88%9D%E8%AF%86/"/>
+    <id>http://yoursite.com/2017/05/05/elasticSearch初识/</id>
+    <published>2017-05-05T09:52:50.000Z</published>
+    <updated>2017-05-05T09:56:44.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="elasticSearch安装和使用"><a href="#elasticSearch安装和使用" class="headerlink" title="elasticSearch安装和使用"></a>elasticSearch安装和使用</h2><h4 id="ElasticSearch-是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点"><a href="#ElasticSearch-是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点" class="headerlink" title="ElasticSearch 是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点"></a>ElasticSearch 是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点</h4><ol>
+<li>接近实时（NRT）</li>
+<li>集群（cluster）</li>
+<li>节点（node）</li>
+<li>索引（index）</li>
+<li>类型（type）</li>
+<li>文档（document）</li>
+<li>分片和复制（shards &amp; replicas）</li>
+</ol>
+<hr>
+<h4 id="说了这么多理论的知识对于我们小白来说用处也不大，那么话不多说直接上手，通过上面的所讲的ElasticSearch是用java编写的，所以在安装ElasticSearch首先要确定你的电脑是否安装的java"><a href="#说了这么多理论的知识对于我们小白来说用处也不大，那么话不多说直接上手，通过上面的所讲的ElasticSearch是用java编写的，所以在安装ElasticSearch首先要确定你的电脑是否安装的java" class="headerlink" title="说了这么多理论的知识对于我们小白来说用处也不大，那么话不多说直接上手，通过上面的所讲的ElasticSearch是用java编写的，所以在安装ElasticSearch首先要确定你的电脑是否安装的java"></a>说了这么多理论的知识对于我们小白来说用处也不大，那么话不多说直接上手，通过上面的所讲的ElasticSearch是用java编写的，所以在安装ElasticSearch首先要确定你的电脑是否安装的java</h4><ul>
+<li><p>首先检测是否安装java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果没有安装了，可以oracle官网下载就行了，<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="external">oracle</a></p>
+</li>
+<li>安装成功之后就可以安装elasticSearch <a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="external">es下载地址</a>或者使用hrew install elasticSearch进行安装</li>
+</ul>
+<h4 id="启动elasticSearch"><a href="#启动elasticSearch" class="headerlink" title="启动elasticSearch"></a>启动elasticSearch</h4><ul>
+<li>其实启动es非常简单直接终端输入elasticsearch就ok了</li>
+<li>当然你可以检测是否安装成功<code>http://127.0.0.1:9200/</code>其实我们可以知道es所访问的端口就是9200端口</li>
+<li><a href="http://www.jackpu.com/zai-macbookzhong-an-zhuang-elasticsearch/" target="_blank" rel="external">安装教程以及应用</a><blockquote>
+<p><a href="http://www.jianshu.com/p/f437b893502a" target="_blank" rel="external">入门教程</a></p>
+<h3 id="在yii2中如何用es进行操作"><a href="#在yii2中如何用es进行操作" class="headerlink" title="在yii2中如何用es进行操作"></a>在yii2中如何用es进行操作</h3></blockquote>
+</li>
+<li>composer安装<code>&quot;yiisoft/yii2-elasticsearch&quot;: &quot;~2.0.0&quot;</code></li>
+<li>yii2中如何配置当然我们可以在commom中的main文件中加入<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">    &apos;elasticsearch&apos; =&gt; [</div><div class="line">    &apos;class&apos; =&gt; &apos;yii\elasticsearch\Connection&apos;,</div><div class="line">    &apos;nodes&apos; =&gt; [</div><div class="line">        [&apos;http_address&apos; =&gt; &apos;127.0.0.1:9200&apos;],</div><div class="line">    ],</div><div class="line">],</div></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;elasticSearch安装和使用&quot;&gt;&lt;a href=&quot;#elasticSearch安装和使用&quot; class=&quot;headerlink&quot; title=&quot;elasticSearch安装和使用&quot;&gt;&lt;/a&gt;elasticSearch安装和使用&lt;/h2&gt;&lt;h4 id=&quot;E
+    
+    </summary>
+    
+      <category term="php" scheme="http://yoursite.com/categories/php/"/>
+    
+    
+      <category term="搜索引擎" scheme="http://yoursite.com/tags/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/"/>
+    
+  </entry>
   
   <entry>
     <title>Homebrew更新问题</title>
