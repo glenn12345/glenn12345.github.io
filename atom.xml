@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-05-05T09:56:44.000Z</updated>
+  <updated>2017-05-08T08:57:32.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/05/05/elasticSearch%E5%88%9D%E8%AF%86/"/>
     <id>http://yoursite.com/2017/05/05/elasticSearch初识/</id>
     <published>2017-05-05T09:52:50.000Z</published>
-    <updated>2017-05-05T09:56:44.000Z</updated>
+    <updated>2017-05-08T08:57:32.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="elasticSearch安装和使用"><a href="#elasticSearch安装和使用" class="headerlink" title="elasticSearch安装和使用"></a>elasticSearch安装和使用</h2><h4 id="ElasticSearch-是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点"><a href="#ElasticSearch-是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点" class="headerlink" title="ElasticSearch 是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点"></a>ElasticSearch 是一款优秀的搜索引擎，用java编写，restful接口的方式进行对接。而且ElasticSearch有几大核心的特点</h4><ol>
 <li>接近实时（NRT）</li>
@@ -43,10 +43,7 @@
 <h4 id="启动elasticSearch"><a href="#启动elasticSearch" class="headerlink" title="启动elasticSearch"></a>启动elasticSearch</h4><ul>
 <li>其实启动es非常简单直接终端输入elasticsearch就ok了</li>
 <li>当然你可以检测是否安装成功<code>http://127.0.0.1:9200/</code>其实我们可以知道es所访问的端口就是9200端口</li>
-<li><a href="http://www.jackpu.com/zai-macbookzhong-an-zhuang-elasticsearch/" target="_blank" rel="external">安装教程以及应用</a><blockquote>
-<p><a href="http://www.jianshu.com/p/f437b893502a" target="_blank" rel="external">入门教程</a></p>
-<h3 id="在yii2中如何用es进行操作"><a href="#在yii2中如何用es进行操作" class="headerlink" title="在yii2中如何用es进行操作"></a>在yii2中如何用es进行操作</h3></blockquote>
-</li>
+<li><a href="http://www.jackpu.com/zai-macbookzhong-an-zhuang-elasticsearch/" target="_blank" rel="external">安装教程以及应用</a><br><a href="http://www.jianshu.com/p/f437b893502a" target="_blank" rel="external">入门教程</a><h3 id="在yii2中如何用es进行操作"><a href="#在yii2中如何用es进行操作" class="headerlink" title="在yii2中如何用es进行操作"></a>在yii2中如何用es进行操作</h3></li>
 <li>composer安装<code>&quot;yiisoft/yii2-elasticsearch&quot;: &quot;~2.0.0&quot;</code></li>
 <li>yii2中如何配置当然我们可以在commom中的main文件中加入<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">    &apos;elasticsearch&apos; =&gt; [</div><div class="line">    &apos;class&apos; =&gt; &apos;yii\elasticsearch\Connection&apos;,</div><div class="line">    &apos;nodes&apos; =&gt; [</div><div class="line">        [&apos;http_address&apos; =&gt; &apos;127.0.0.1:9200&apos;],</div><div class="line">    ],</div><div class="line">],</div></pre></td></tr></table></figure>
 </li>
@@ -59,7 +56,7 @@
     
     </summary>
     
-      <category term="php" scheme="http://yoursite.com/categories/php/"/>
+      <category term="PHP" scheme="http://yoursite.com/categories/PHP/"/>
     
     
       <category term="搜索引擎" scheme="http://yoursite.com/tags/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/"/>
