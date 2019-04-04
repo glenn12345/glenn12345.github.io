@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-04-04T07:43:42.395Z</updated>
+  <updated>2019-04-04T07:48:01.546Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2019/04/04/redis%E4%BA%8B%E7%89%A9%E6%93%8D%E4%BD%9C/"/>
     <id>http://yoursite.com/2019/04/04/redis事物操作/</id>
     <published>2019-04-04T07:43:50.000Z</published>
-    <updated>2019-04-04T07:43:42.395Z</updated>
+    <updated>2019-04-04T07:48:01.546Z</updated>
     
     <content type="html"><![CDATA[<h3 id="redis-事物操作"><a href="#redis-事物操作" class="headerlink" title="redis 事物操作"></a>redis 事物操作</h3><hr>
 <ul>
@@ -92,7 +92,7 @@
       <category term="redis" scheme="http://yoursite.com/categories/redis/"/>
     
     
-      <category term="redis" scheme="http://yoursite.com/tags/redis/"/>
+      <category term="redis事物" scheme="http://yoursite.com/tags/redis%E4%BA%8B%E7%89%A9/"/>
     
   </entry>
   
@@ -101,7 +101,7 @@
     <link href="http://yoursite.com/2019/03/28/redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     <id>http://yoursite.com/2019/03/28/redis分布式锁/</id>
     <published>2019-03-28T09:15:50.000Z</published>
-    <updated>2019-04-04T07:44:04.345Z</updated>
+    <updated>2019-04-04T07:48:30.922Z</updated>
     
     <content type="html"><![CDATA[<h3 id="redis-分布式锁"><a href="#redis-分布式锁" class="headerlink" title="redis 分布式锁"></a>redis 分布式锁</h3><ul>
 <li>分布式应用进行逻辑处理时经常会遇到并发问题。<blockquote>
@@ -180,7 +180,7 @@
       <category term="redis" scheme="http://yoursite.com/categories/redis/"/>
     
     
-      <category term="redis" scheme="http://yoursite.com/tags/redis/"/>
+      <category term="redis分布式锁" scheme="http://yoursite.com/tags/redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
