@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-03-28T09:15:46.524Z</updated>
+  <updated>2019-04-04T07:43:42.395Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,10 +17,91 @@
   
   <entry>
     <title>redis</title>
+    <link href="http://yoursite.com/2019/04/04/redis%E4%BA%8B%E7%89%A9%E6%93%8D%E4%BD%9C/"/>
+    <id>http://yoursite.com/2019/04/04/redis事物操作/</id>
+    <published>2019-04-04T07:43:50.000Z</published>
+    <updated>2019-04-04T07:43:42.395Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="redis-事物操作"><a href="#redis-事物操作" class="headerlink" title="redis 事物操作"></a>redis 事物操作</h3><hr>
+<ul>
+<li>为了确保连续多个操作的原子性，一个成熟的数据库通常都会有事物支持，Redis也不不例外。Redis 的事务使用非常简单，不同于关系数据库，我们无须理解那么多复杂的事务模型，就可以直接使用。不过也正是因为这种简单性，它的事务模型很不严格，这要求我们不能像使用关系数据库的事务一样来使用 Redis。</li>
+</ul>
+<h4 id="Redis-事务的基本使用"><a href="#Redis-事务的基本使用" class="headerlink" title="Redis 事务的基本使用"></a>Redis 事务的基本使用</h4><ul>
+<li>每个事务的操作都有 begin、commit 和 rollback，begin 指示事务的开始，commit 指示事务的提交，rollback 指示事务的回滚。</li>
+<li><p><strong>Redis</strong> 在形式上看起来也差不多，分别是 multi/exec/discard。multi 指示事务的开始，exec 指示事务的执行，discard 指示事务的丢弃。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; multi</div><div class="line">OK</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; exec</div><div class="line">(integer) 1</div><div class="line">(integer) 2</div></pre></td></tr></table></figure>
+</li>
+<li><p>上面的指令演示了一个完整的事务过程，所有的指令在 exec 之前不执行，而是缓存在服务器的一个事务队列中，服务器一旦收到 exec 指令，才开执行整个事务队列，执行完毕后一次性返回所有指令的运行结果。因为 Redis 的单线程特性，它不用担心自己在执行队列的时候被其它指令打搅，可以保证他们能得到的「原子性」执行。</p>
+</li>
+</ul>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><ul>
+<li><p>事务的原子性是指要么事务全部成功，要么全部失败，那么 Redis 事务执行是原子性的么？</p>
+<p>下面我们来看一个特别的例子。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&gt; multi</div><div class="line">OK</div><div class="line">&gt; set books iamastring</div><div class="line">QUEUED</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; set poorman iamdesperate</div><div class="line">QUEUED</div><div class="line">&gt; exec</div><div class="line">1) OK</div><div class="line">2) (error) ERR value is not an integer or out of range</div><div class="line">3) OK</div><div class="line">&gt; get books</div><div class="line">&quot;iamastring&quot;</div><div class="line">&gt;  get poorman</div><div class="line">&quot;iamdesperate</div></pre></td></tr></table></figure>
+<ul>
+<li>上面的例子是事务执行到中间遇到失败了，因为我们不能对一个字符串进行数学运算，事务在遇到指令执行失败后，后面的指令还继续执行，所以 poorman 的值能继续得到设置。</li>
+</ul>
+<hr>
+<ul>
+<li>到这里，你应该明白 Redis 的事务根本不能算「原子性」，而仅仅是满足了事务的「隔离性」，隔离性中的串行化——当前执行的事务有着不被其它事务打断的权利。</li>
+</ul>
+<h4 id="discard-丢弃"><a href="#discard-丢弃" class="headerlink" title="discard(丢弃)"></a>discard(丢弃)</h4><hr>
+<ul>
+<li><p>Redis 为事务提供了一个 discard 指令，用于丢弃事务缓存队列中的所有指令，在 exec 执行之前。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; get books</div><div class="line">(nil)</div><div class="line">&gt; multi</div><div class="line">OK</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; discard</div><div class="line">OK</div><div class="line">&gt; get books</div><div class="line">(nil)</div></pre></td></tr></table></figure>
+</li>
+<li><p>我们可以看到 discard 之后，队列中的所有指令都没执行，就好像 multi 和 discard 中间的所有指令从未发生过一样。</p>
+</li>
+</ul>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><ul>
+<li>上面的 Redis 事务在发送每个指令到事务缓存队列时都要经过一次网络读写，当一个事务内部的指令较多时，需要的网络 IO 时间也会线性增长。所以通常 Redis 的客户端在执行事务时都会结合 pipeline 一起使用，这样可以将多次 IO 操作压缩为单次 IO 操作。比如在使用 Python 的 Redis 客户端时执行事务时是要强制使用 pipeline 的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">pipe = redis.pipeline(transaction=true)</div><div class="line">pipe.multi()</div><div class="line">pipe.incr(&quot;books&quot;)</div><div class="line">pipe.incr(&quot;books&quot;)</div><div class="line">values = pipe.execute()</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Watch"><a href="#Watch" class="headerlink" title="Watch"></a>Watch</h4><hr>
+<ul>
+<li>考虑到一个业务场景，Redis 存储了我们的账户余额数据，它是一个整数。现在有两个并发的客户端要对账户余额进行修改操作，这个修改不是一个简单的 incrby 指令，而是要对余额乘以一个倍数。Redis 可没有提供 multiplyby 这样的指令。我们需要先取出余额然后在内存里乘以倍数，再将结果写回 Redis。</li>
+<li>这就会出现并发问题，因为有多个客户端会并发进行操作。我们可以通过 Redis 的分布式锁来避免冲突，这是一个很好的解决方案。<strong>分布式锁是一种悲观锁，那是不是可以使用乐观锁的方式来解决冲突呢？</strong></li>
+</ul>
+<hr>
+<ul>
+<li>Redis 提供了这种 watch 的机制，它就是一种乐观锁。有了 watch 我们又多了一种可以用来解决并发修改的方法。 watch 的使用方式如下：</li>
+</ul>
+<hr>
+<ul>
+<li><p>watch 会在事务开始之前盯住 1 个或多个关键变量，当事务执行时，也就是服务器收到了 exec 指令要顺序执行缓存的事务队列时，Redis 会检查关键变量自 watch 之后，是否被修改了 (包括当前事务所在的客户端)。如果关键变量被人动过了，exec 指令就会返回 null 回复告知客户端事务执行失败，这个时候客户端一般会选择重试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt; watch books</div><div class="line">OK</div><div class="line">&gt; incr books  # 被修改了</div><div class="line">(integer) 1</div><div class="line">&gt; multi</div><div class="line">OK</div><div class="line">&gt; incr books</div><div class="line">QUEUED</div><div class="line">&gt; exec  # 事务执行失败</div><div class="line">(nil)</div></pre></td></tr></table></figure>
+</li>
+<li><p>当服务器给 exec 指令返回一个 null 回复时，客户端知道了事务执行是失败的，通常客户端 (redis-py) 都会抛出一个 WatchError 这种错误，不过也有些语言 (jedis) 不会抛出异常，而是通过在 exec 方法里返回一个 null，这样客户端需要检查一下返回结果是否为 null 来确定事务是否执行失败。Redis 禁止在 multi 和 exec 之间执行 watch 指令，而必须在 multi 之前做好盯住关键变量，否则会出错。</p>
+</li>
+</ul>
+<h4 id="redis-为什么不支持回滚"><a href="#redis-为什么不支持回滚" class="headerlink" title="redis 为什么不支持回滚"></a>redis 为什么不支持回滚</h4><ul>
+<li>不支持回滚操作是因为redis是先执行指令然后做日志，所以即使发生异常，没有可以用来执行回滚操作的日志。传统的数据库都是先做日志然后再做操作。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;redis-事物操作&quot;&gt;&lt;a href=&quot;#redis-事物操作&quot; class=&quot;headerlink&quot; title=&quot;redis 事物操作&quot;&gt;&lt;/a&gt;redis 事物操作&lt;/h3&gt;&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;为了确保连续多个操作的原子性，一个成熟的数据库通常都会
+    
+    </summary>
+    
+      <category term="redis" scheme="http://yoursite.com/categories/redis/"/>
+    
+    
+      <category term="redis" scheme="http://yoursite.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redis</title>
     <link href="http://yoursite.com/2019/03/28/redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     <id>http://yoursite.com/2019/03/28/redis分布式锁/</id>
     <published>2019-03-28T09:15:50.000Z</published>
-    <updated>2019-03-28T09:15:46.524Z</updated>
+    <updated>2019-04-04T07:44:04.345Z</updated>
     
     <content type="html"><![CDATA[<h3 id="redis-分布式锁"><a href="#redis-分布式锁" class="headerlink" title="redis 分布式锁"></a>redis 分布式锁</h3><ul>
 <li>分布式应用进行逻辑处理时经常会遇到并发问题。<blockquote>
@@ -96,7 +177,7 @@
     
     </summary>
     
-      <category term="PHP" scheme="http://yoursite.com/categories/PHP/"/>
+      <category term="redis" scheme="http://yoursite.com/categories/redis/"/>
     
     
       <category term="redis" scheme="http://yoursite.com/tags/redis/"/>
